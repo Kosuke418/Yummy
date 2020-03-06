@@ -18,13 +18,13 @@ public class Result : MonoBehaviour
     void Start()
     {
         totalTime = 5f;
-        if (MainGameManager2.P1Score > MainGameManager2.P2Score)
+        if (MainGameManager.P1Score > MainGameManager.P2Score)
         {
             Player1.GetComponent<SpriteRenderer>().enabled = true;
             ResultText.text = "P1の勝ち！";
 
         }
-        else if (MainGameManager2.P1Score < MainGameManager2.P2Score)
+        else if (MainGameManager.P1Score < MainGameManager.P2Score)
         {
             Player2.GetComponent<SpriteRenderer>().enabled = true;
             ResultText.text = "P2の勝ち！";

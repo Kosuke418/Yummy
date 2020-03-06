@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.3587269, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 39315293}
   - component: {fileID: 39315292}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: P1TIle6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 64165128}
   - component: {fileID: 64165127}
   m_Layer: 5
-  m_Name: Image (4)
+  m_Name: P1TIle7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -624,6 +624,7 @@ GameObject:
   - component: {fileID: 122841094}
   - component: {fileID: 122841091}
   - component: {fileID: 122841089}
+  - component: {fileID: 122841095}
   - component: {fileID: 122841092}
   - component: {fileID: 122841093}
   m_Layer: 0
@@ -647,10 +648,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 28323815}
   totalTime: 1
-  select10: {fileID: 138209330}
-  select11: {fileID: 839769588}
-  select20: {fileID: 369101517}
-  select21: {fileID: 616034383}
   madeFood1:
   - {fileID: 370540923}
   - {fileID: 429191376}
@@ -973,14 +970,6 @@ MonoBehaviour:
       AnswerName: "\u30D4\u30FC\u30DE\u30F3"
     - AnswerNumber: 11
       AnswerName: "\u8C5A\u8089"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u30AA\u30E0\u30E9\u30A4\u30B9"
     FoodSprite: {fileID: 21300000, guid: 9013ecebd9de74747bb8d15487c5fcd8, type: 3}
     FoodScore: 400
@@ -993,14 +982,6 @@ MonoBehaviour:
       AnswerName: "\u30B1\u30C1\u30E3\u30C3\u30D7"
     - AnswerNumber: 12
       AnswerName: "\u9D8F\u8089"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u30C1\u30E3\u30FC\u30CF\u30F3"
     FoodSprite: {fileID: 21300000, guid: 3554c2eafeae9e64a8bbd62c41a3a166, type: 3}
     FoodScore: 500
@@ -1015,12 +996,6 @@ MonoBehaviour:
       AnswerName: "\u306B\u3093\u3058\u3093"
     - AnswerNumber: 4
       AnswerName: "\u306D\u304E"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u725B\u4E3C"
     FoodSprite: {fileID: 21300000, guid: 50a43f4f7356fac46b0e0237d8cf3fd6, type: 3}
     FoodScore: 300
@@ -1031,16 +1006,6 @@ MonoBehaviour:
       AnswerName: "\u725B\u8089"
     - AnswerNumber: 3
       AnswerName: "\u305F\u307E\u306D\u304E"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u3059\u304D\u713C\u304D"
     FoodSprite: {fileID: 21300000, guid: e9a7fc108b9760348a30987676120374, type: 3}
     FoodScore: 300
@@ -1051,16 +1016,6 @@ MonoBehaviour:
       AnswerName: "\u8C46\u8150"
     - AnswerNumber: 4
       AnswerName: "\u306D\u304E"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u51B7\u3084\u3057\u4E2D\u83EF"
     FoodSprite: {fileID: 21300000, guid: fc4fcdf94a3cb64479ca1605504a4021, type: 3}
     FoodScore: 500
@@ -1075,12 +1030,6 @@ MonoBehaviour:
       AnswerName: "\u304D\u3085\u3046\u308A"
     - AnswerNumber: 16
       AnswerName: "\u305F\u307E\u3054"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u56DE\u934B\u8089"
     FoodSprite: {fileID: 21300000, guid: ff92daf098a5d034e807bbebc155de43, type: 3}
     FoodScore: 400
@@ -1093,14 +1042,6 @@ MonoBehaviour:
       AnswerName: "\u30D4\u30FC\u30DE\u30F3"
     - AnswerNumber: 4
       AnswerName: "\u306D\u304E"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u30CA\u30DD\u30EA\u30BF\u30F3"
     FoodSprite: {fileID: 21300000, guid: 32ed2715f49bad946a5feb4ce028d09e, type: 3}
     FoodScore: 400
@@ -1113,14 +1054,6 @@ MonoBehaviour:
       AnswerName: "\u30D4\u30FC\u30DE\u30F3"
     - AnswerNumber: 13
       AnswerName: "\u30BD\u30FC\u30BB\u30FC\u30B8"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u30B8\u30E3\u30FC\u30DE\u30F3\u30DD\u30C6\u30C8"
     FoodSprite: {fileID: 21300000, guid: ce7ce433b94336d4dacb0a36130f9f49, type: 3}
     FoodScore: 300
@@ -1131,16 +1064,6 @@ MonoBehaviour:
       AnswerName: "\u305F\u307E\u306D\u304E"
     - AnswerNumber: 13
       AnswerName: "\u30BD\u30FC\u30BB\u30FC\u30B8"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u8336\u7897\u84B8\u3057"
     FoodSprite: {fileID: 21300000, guid: d3a7620b2f4623748a6751a9866a18e2, type: 3}
     FoodScore: 300
@@ -1151,16 +1074,6 @@ MonoBehaviour:
       AnswerName: "\u3068\u308A\u306B\u304F"
     - AnswerNumber: 9
       AnswerName: "\u3057\u3044\u305F\u3051"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u30ED\u30FC\u30EB\u30AD\u30E3\u30D9\u30C4"
     FoodSprite: {fileID: 21300000, guid: 487b8a2ae11d18046ba4f9b8fa1f044f, type: 3}
     FoodScore: 300
@@ -1171,16 +1084,6 @@ MonoBehaviour:
       AnswerName: "\u305F\u307E\u306D\u304E"
     - AnswerNumber: 11
       AnswerName: "\u8C5A\u8089"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u30AB\u30D7\u30EC\u30FC\u30BC"
     FoodSprite: {fileID: 21300000, guid: 58c3fad4d13f8de4ab1d066ad6d28898, type: 3}
     FoodScore: 200
@@ -1189,18 +1092,6 @@ MonoBehaviour:
       AnswerName: "\u30C8\u30DE\u30C8"
     - AnswerNumber: 17
       AnswerName: "\u30C1\u30FC\u30BA"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
   - FoodName: "\u9EBB\u5A46\u8C46\u8150"
     FoodSprite: {fileID: 21300000, guid: dec0a957c7b8b4e4cbd71445acf2cb3d, type: 3}
     FoodScore: 300
@@ -1211,16 +1102,24 @@ MonoBehaviour:
       AnswerName: "\u8C5A\u8089"
     - AnswerNumber: 4
       AnswerName: "\u306D\u304E"
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
-    - AnswerNumber: 0
-      AnswerName: 
+--- !u!114 &122841095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122841088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00049f19ae34441908e2dd6da5c018d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftSelectCursor1: {fileID: 138209330}
+  rightSelectCursor1: {fileID: 839769588}
+  leftSelectCursor2: {fileID: 369101517}
+  rightSelectCursor2: {fileID: 616034383}
+  seSource: {fileID: 122841092}
+  select: {fileID: 8300000, guid: 8dbd3ae0a638cac44a7a2587d5f564ca, type: 3}
 --- !u!1 &138209328
 GameObject:
   m_ObjectHideFlags: 0
@@ -1233,7 +1132,7 @@ GameObject:
   - component: {fileID: 138209331}
   - component: {fileID: 138209330}
   m_Layer: 5
-  m_Name: Player1SelectLeft
+  m_Name: LeftSelectCursor1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1307,7 +1206,7 @@ GameObject:
   - component: {fileID: 211958360}
   - component: {fileID: 211958361}
   m_Layer: 5
-  m_Name: P1MadeFood3 (1)
+  m_Name: P1MadeFood5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1382,7 +1281,7 @@ GameObject:
   - component: {fileID: 218653725}
   - component: {fileID: 218653724}
   m_Layer: 5
-  m_Name: Image (4)
+  m_Name: P2TIle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1404,7 +1303,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.19000001, y: 0.41000003}
   m_AnchorMax: {x: 0.44500002, y: 0.54049665}
-  m_AnchoredPosition: {x: 1.5098648, y: -0.27000427}
+  m_AnchoredPosition: {x: 1.5098677, y: -0.27000427}
   m_SizeDelta: {x: -0.9802475, y: 0.10800171}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &218653724
@@ -1624,7 +1523,7 @@ GameObject:
   - component: {fileID: 308506564}
   - component: {fileID: 308506563}
   m_Layer: 5
-  m_Name: Image (6)
+  m_Name: P1TIle8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1712,7 +1611,7 @@ GameObject:
   - component: {fileID: 369101518}
   - component: {fileID: 369101517}
   m_Layer: 5
-  m_Name: Player2SelectLeft
+  m_Name: LeftSelectCursor2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1859,6 +1758,7 @@ GameObject:
   - component: {fileID: 370568295}
   - component: {fileID: 370568297}
   - component: {fileID: 370568296}
+  - component: {fileID: 370568298}
   m_Layer: 5
   m_Name: DialogPanel
   m_TagString: Untagged
@@ -1923,6 +1823,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 370568294}
   m_CullTransparentMesh: 0
+--- !u!114 &370568298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370568294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c764a5aa02724f3e9e6dbe1868b3935, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DialogText: {fileID: 274655992}
 --- !u!1 &372840335
 GameObject:
   m_ObjectHideFlags: 0
@@ -2010,7 +1923,7 @@ GameObject:
   - component: {fileID: 416131635}
   - component: {fileID: 416131634}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: P2TIle6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2333,7 +2246,7 @@ GameObject:
   - component: {fileID: 616034384}
   - component: {fileID: 616034383}
   m_Layer: 5
-  m_Name: Player2SelectRight
+  m_Name: RightSelectCursor2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2408,7 +2321,7 @@ GameObject:
   - component: {fileID: 627472218}
   - component: {fileID: 627472217}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: P1TIle0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2571,7 +2484,7 @@ GameObject:
   - component: {fileID: 683024658}
   - component: {fileID: 683024657}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: P1TIle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2660,7 +2573,7 @@ GameObject:
   - component: {fileID: 685725700}
   - component: {fileID: 685725699}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: P2TIle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2682,7 +2595,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.19000001, y: 0.5654966}
   m_AnchorMax: {x: 0.44500002, y: 0.698}
-  m_AnchoredPosition: {x: 1.5098648, y: -0.66200256}
+  m_AnchoredPosition: {x: 1.5098677, y: -0.66200256}
   m_SizeDelta: {x: -0.9802475, y: -0.8919983}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &685725699
@@ -2828,7 +2741,7 @@ GameObject:
   - component: {fileID: 766683002}
   - component: {fileID: 766683001}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: P2TIle5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2990,7 +2903,7 @@ GameObject:
   - component: {fileID: 839769589}
   - component: {fileID: 839769588}
   m_Layer: 5
-  m_Name: Player1SelectRight
+  m_Name: RightSelectCursor1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3064,7 +2977,7 @@ GameObject:
   - component: {fileID: 861521956}
   - component: {fileID: 861521957}
   m_Layer: 5
-  m_Name: P1MadeFood4 (1)
+  m_Name: P1MadeFood6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3831,7 +3744,7 @@ GameObject:
   - component: {fileID: 1200726184}
   - component: {fileID: 1200726183}
   m_Layer: 5
-  m_Name: Image
+  m_Name: P1TIle5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3920,7 +3833,7 @@ GameObject:
   - component: {fileID: 1220412578}
   - component: {fileID: 1220412577}
   m_Layer: 5
-  m_Name: Image (7)
+  m_Name: P1TIle3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4228,7 +4141,7 @@ GameObject:
   - component: {fileID: 1441958711}
   - component: {fileID: 1441958710}
   m_Layer: 5
-  m_Name: Image (7)
+  m_Name: P2TIle8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4469,7 +4382,7 @@ GameObject:
   - component: {fileID: 1454991117}
   - component: {fileID: 1454991118}
   m_Layer: 5
-  m_Name: P2MadeFood3 (1)
+  m_Name: P2MadeFood5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4544,7 +4457,7 @@ GameObject:
   - component: {fileID: 1462570847}
   - component: {fileID: 1462570846}
   m_Layer: 5
-  m_Name: Image
+  m_Name: P2TIle0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4566,7 +4479,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.19000001, y: 0.7153847}
   m_AnchorMax: {x: 0.44500002, y: 0.85}
-  m_AnchoredPosition: {x: 1.5098648, y: 0.94599915}
+  m_AnchoredPosition: {x: 1.5098677, y: 0.94599915}
   m_SizeDelta: {x: -0.9802475, y: -1.8919983}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1462570846
@@ -4632,7 +4545,7 @@ GameObject:
   - component: {fileID: 1573056345}
   - component: {fileID: 1573056346}
   m_Layer: 5
-  m_Name: P2MadeFood4 (1)
+  m_Name: P2MadeFood6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4796,7 +4709,7 @@ GameObject:
   - component: {fileID: 1738960554}
   - component: {fileID: 1738960553}
   m_Layer: 5
-  m_Name: Image (5)
+  m_Name: P1TIle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4885,7 +4798,7 @@ GameObject:
   - component: {fileID: 1786812079}
   - component: {fileID: 1786812078}
   m_Layer: 5
-  m_Name: Image (6)
+  m_Name: P2TIle3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4907,7 +4820,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.19000001, y: 0.25776625}
   m_AnchorMax: {x: 0.44500002, y: 0.38500002}
-  m_AnchoredPosition: {x: 1.5098648, y: -0.8779907}
+  m_AnchoredPosition: {x: 1.5098677, y: -0.8779907}
   m_SizeDelta: {x: -0.9802475, y: 1.1080017}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1786812078
@@ -4974,7 +4887,7 @@ GameObject:
   - component: {fileID: 1793793967}
   - component: {fileID: 1793793966}
   m_Layer: 5
-  m_Name: Image (9)
+  m_Name: P2TIle9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5167,7 +5080,7 @@ GameObject:
   - component: {fileID: 1847874555}
   - component: {fileID: 1847874554}
   m_Layer: 5
-  m_Name: Image (9)
+  m_Name: P1TIle4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5621,7 +5534,7 @@ GameObject:
   - component: {fileID: 1912116479}
   - component: {fileID: 1912116478}
   m_Layer: 5
-  m_Name: Image (8)
+  m_Name: P1TIle9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5710,7 +5623,7 @@ GameObject:
   - component: {fileID: 1941632666}
   - component: {fileID: 1941632665}
   m_Layer: 5
-  m_Name: Image (8)
+  m_Name: P2TIle4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5732,7 +5645,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.19000001, y: 0.105489895}
   m_AnchorMax: {x: 0.44500002, y: 0.23279995}
-  m_AnchoredPosition: {x: 1.5098648, y: -1.986023}
+  m_AnchoredPosition: {x: 1.5098677, y: -1.986023}
   m_SizeDelta: {x: -0.9802475, y: 1.1080017}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1941632665
@@ -5799,7 +5712,7 @@ GameObject:
   - component: {fileID: 2073865257}
   - component: {fileID: 2073865256}
   m_Layer: 5
-  m_Name: Image (5)
+  m_Name: P2TIle7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

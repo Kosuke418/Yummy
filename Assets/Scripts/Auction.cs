@@ -46,8 +46,6 @@ public class Auction : MonoBehaviour
         countQuartzer = 0;
         CoinYet[0] = 10;
         CoinYet[1] = 10;
-
-        Debug.Log("スタート");
         
         //結果表示画面を不可視化
         for (int count = 0; count < 2; count++)
@@ -66,15 +64,15 @@ public class Auction : MonoBehaviour
         p2BidValueText.text = "0";
 
         //プレイヤースコアテキストを設定
-        p1ScoreText.text = (MainGameManager2.P1Score).ToString();
-        p2ScoreText.text = (MainGameManager2.P2Score).ToString();
+        p1ScoreText.text = (MainGameManager.P1Score).ToString();
+        p2ScoreText.text = (MainGameManager.P2Score).ToString();
 
         //操作テキストを設定
         lbText.text = "+" + lowBid.ToString();
         rbText.text = "+" + highBid.ToString();
 
         //ここから食材画像を指定
-        foodImage.sprite = Library.Instance.Ingreds[MainGameManager2.IngredNum].IngredSprite;
+        foodImage.sprite = Library.Instance.Ingreds[MainGameManager.IngredNum].IngredSprite;
 
         
         //AudioSourceConmponentを取得
@@ -84,8 +82,8 @@ public class Auction : MonoBehaviour
         bidTimeReCast.text = "時間回復回数\nあと" + bidCount + "回";
 
         //食料がリーチの時点数を表示
-        p1FoodPoint.text = MainGameManager2.P1ReachScore;
-        p2FoodPoint.text = MainGameManager2.P2ReachScore;
+        p1FoodPoint.text = MainGameManager.P1ReachScore;
+        p2FoodPoint.text = MainGameManager.P2ReachScore;
     }
 
     private void Update()
@@ -106,21 +104,21 @@ public class Auction : MonoBehaviour
                 textCase[1] = int.Parse(p2BidValueText.text);
                 if (textCase[0] < textCase[1])
                 {
-                    MainGameManager2.P2Score -= int.Parse(p2BidValueText.text);
-                    MainGameManager2.PrecedNum = 2;
+                    MainGameManager.P2Score -= int.Parse(p2BidValueText.text);
+                    MainGameManager.PrecedNum = 2;
                     EndAuction();
                 }
                 else if (textCase[0] > textCase[1])
                 {
-                    MainGameManager2.P1Score -= int.Parse(p1BidValueText.text);
-                    MainGameManager2.PrecedNum = 1;
+                    MainGameManager.P1Score -= int.Parse(p1BidValueText.text);
+                    MainGameManager.PrecedNum = 1;
                     EndAuction();
                 }
                 else if (textCase[0] == textCase[1])
                 {
                     //kamenRider = 3;
-                    MainGameManager2.GameProgress = 2;
-                    MainGameManager2.TurnCount--;
+                    MainGameManager.GameProgress = 2;
+                    MainGameManager.TurnCount--;
                     SceneManager.LoadScene("Main");
 
                 }
@@ -137,7 +135,7 @@ public class Auction : MonoBehaviour
                 coinCount+=1;
             }
             if (kamenRider <= 0) {
-                MainGameManager2.GameProgress = 1;
+                MainGameManager.GameProgress = 1;
                 SceneManager.LoadScene("Main");
             }
         }
@@ -205,17 +203,16 @@ public class Auction : MonoBehaviour
             G = endImage[n].GetComponent<Image>().color.g;
             B = endImage[n].GetComponent<Image>().color.b;
             endImage[n].GetComponent<Image>().color = new Color(R, G, B, 1.0f);
-            Debug.Log(R + " " + G + " " + B);
         }
         R = endText[0].GetComponent<Text>().color.r;
         G = endText[0].GetComponent<Text>().color.g;
         B = endText[0].GetComponent<Text>().color.b;
         endText[0].GetComponent<Text>().color = new Color(R, G, B, 1.0f);
 
-        if (MainGameManager2.PrecedNum == 1)
+        if (MainGameManager.PrecedNum == 1)
         {
             endText[0].text = "Player1が\n" + textCase[0].ToString() + "点で\n落札しました";
-        }else if (MainGameManager2.PrecedNum == 2)
+        }else if (MainGameManager.PrecedNum == 2)
         {
             endText[0].text = "Player2が\n" + textCase[1].ToString() + "点で\n落札しました";
         }
