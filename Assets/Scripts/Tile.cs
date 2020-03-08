@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class Tile : MonoBehaviour
 {
 
-    public int IndCols;
-    public int IndRows;
+    public int PlayerNo;
+    public int TileNo;
 
     public int Number
     {
@@ -21,7 +21,6 @@ public class Tile : MonoBehaviour
             if (number == 0)
             {
                 SetEmpty();
-                SetMaterial();
             }
             else
             {
@@ -139,11 +138,5 @@ public class Tile : MonoBehaviour
     private void SetEmpty()
     {
         TileImage.enabled = false;
-    }
-
-    void SetMaterial()
-    {
-        float level = Mathf.Lerp(0, 1, Time.time);
-        TileImage.material.SetFloat("_Vector1_D08391B4", level);
     }
 }

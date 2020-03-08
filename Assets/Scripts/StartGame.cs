@@ -9,20 +9,18 @@ public class StartGame : MonoBehaviour
     public Text Press;
     private float level;
 
-    // Start is called before the first frame update
     void Start()
     {
-        MainGameManager.P1Score = 100;
-        MainGameManager.P2Score = 100;
-        MainGameManager.IngredNum=0;
-        MainGameManager.IngredNum2=0;
-        MainGameManager.GameProgress=0;
-        MainGameManager.PrecedNum=0;
-        MainGameManager.Player1Ingred = new int[10];
-        MainGameManager.Player2Ingred = new int[10];
+        //MainGameManager.player1Money = 1000;
+        //MainGameManager.player2Money = 1000;
+        MainGameManager.leftIngredientNo =0;
+        MainGameManager.rightIngredientNo =0;
+        MainGameManager.howToReturnFromAuction =0;
+        MainGameManager.preferredPlayerNo =0;
+        MainGameManager.player1CuisineNos = new List<int>();
+        MainGameManager.player2CuisineNos = new List<int>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         level = Mathf.Abs(Mathf.Sin(Time.time * 10));

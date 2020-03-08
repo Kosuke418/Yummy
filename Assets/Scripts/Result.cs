@@ -18,13 +18,14 @@ public class Result : MonoBehaviour
     void Start()
     {
         totalTime = 5f;
-        if (MainGameManager.P1Score > MainGameManager.P2Score)
+        /*
+        if (MainGameManager.player1Money > MainGameManager.player2Money)
         {
             Player1.GetComponent<SpriteRenderer>().enabled = true;
             ResultText.text = "P1の勝ち！";
 
         }
-        else if (MainGameManager.P1Score < MainGameManager.P2Score)
+        else if (MainGameManager.player1Money < MainGameManager.player2Money)
         {
             Player2.GetComponent<SpriteRenderer>().enabled = true;
             ResultText.text = "P2の勝ち！";
@@ -35,6 +36,7 @@ public class Result : MonoBehaviour
             hikiwake2.GetComponent<SpriteRenderer>().enabled = true;
             ResultText.text = "引き分け！！";
         }
+        */
     }
 
     // Update is called once per frame

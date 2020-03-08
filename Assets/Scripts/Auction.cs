@@ -22,7 +22,7 @@ public class Auction : MonoBehaviour
     AudioSource audioMoney1;
     int player, kamenRiderKuronos, kamenRiderZeroOne, pcount, coinCount, charaCount, bidCount, p1BidCount, p2BidCount, countQuartzer, lowBid, highBid;//playerは現在の先行プレイヤーと入札ターンのプレイヤーの判定に使う。
     int[] textCase = new int[2];
-    int[] CoinYet=new int[2];
+    int[] CoinYet = new int[2];
     float R, G, B, kamenRider, charaTransform, curtainTransform, x, y, z, p1TenCount, p2TenCount;
 
     void Start()
@@ -46,7 +46,7 @@ public class Auction : MonoBehaviour
         countQuartzer = 0;
         CoinYet[0] = 10;
         CoinYet[1] = 10;
-        
+
         //結果表示画面を不可視化
         for (int count = 0; count < 2; count++)
         {
@@ -64,17 +64,17 @@ public class Auction : MonoBehaviour
         p2BidValueText.text = "0";
 
         //プレイヤースコアテキストを設定
-        p1ScoreText.text = (MainGameManager.P1Score).ToString();
-        p2ScoreText.text = (MainGameManager.P2Score).ToString();
+        p1ScoreText.text = (MainGameManager.player1Score).ToString();
+        p2ScoreText.text = (MainGameManager.player2Score).ToString();
 
         //操作テキストを設定
         lbText.text = "+" + lowBid.ToString();
         rbText.text = "+" + highBid.ToString();
 
         //ここから食材画像を指定
-        foodImage.sprite = Library.Instance.Ingreds[MainGameManager.IngredNum].IngredSprite;
+        foodImage.sprite = Library.Instance.Ingreds[MainGameManager.leftIngredientNo].IngredSprite;
 
-        
+
         //AudioSourceConmponentを取得
         audioMoney1 = GetComponent<AudioSource>();
 
@@ -82,8 +82,8 @@ public class Auction : MonoBehaviour
         bidTimeReCast.text = "時間回復回数\nあと" + bidCount + "回";
 
         //食料がリーチの時点数を表示
-        p1FoodPoint.text = MainGameManager.P1ReachScore;
-        p2FoodPoint.text = MainGameManager.P2ReachScore;
+        //p1FoodPoint.text = MainGameManager.P1ReachScore;
+        //p2FoodPoint.text = MainGameManager.P2ReachScore;
     }
 
     private void Update()
@@ -104,21 +104,21 @@ public class Auction : MonoBehaviour
                 textCase[1] = int.Parse(p2BidValueText.text);
                 if (textCase[0] < textCase[1])
                 {
-                    MainGameManager.P2Score -= int.Parse(p2BidValueText.text);
-                    MainGameManager.PrecedNum = 2;
+                    //MainGameManager.player2Money -= int.Parse(p2BidValueText.text);
+                    MainGameManager.preferredPlayerNo = 2;
                     EndAuction();
                 }
                 else if (textCase[0] > textCase[1])
                 {
-                    MainGameManager.P1Score -= int.Parse(p1BidValueText.text);
-                    MainGameManager.PrecedNum = 1;
+                    //MainGameManager.player1Money -= int.Parse(p1BidValueText.text);
+                    MainGameManager.preferredPlayerNo = 1;
                     EndAuction();
                 }
                 else if (textCase[0] == textCase[1])
                 {
                     //kamenRider = 3;
-                    MainGameManager.GameProgress = 2;
-                    MainGameManager.TurnCount--;
+                    MainGameManager.howToReturnFromAuction = 2;
+                    MainGameManager.remainingTurnCount--;
                     SceneManager.LoadScene("Main");
 
                 }
@@ -132,10 +132,11 @@ public class Auction : MonoBehaviour
             if (coinCount % 3 == 0)
             {
                 audioMoney1.PlayOneShot(soundMoney2);
-                coinCount+=1;
+                coinCount += 1;
             }
-            if (kamenRider <= 0) {
-                MainGameManager.GameProgress = 1;
+            if (kamenRider <= 0)
+            {
+                MainGameManager.howToReturnFromAuction = 1;
                 SceneManager.LoadScene("Main");
             }
         }
@@ -180,7 +181,7 @@ public class Auction : MonoBehaviour
                 CoinYet[1] = bidPlayer;
                 TimeReCast();
             }
-            else if (bidPlayer == 2&& textCase[0] >= textCase[1])
+            else if (bidPlayer == 2 && textCase[0] >= textCase[1])
             {
                 CoinCreate(CoinYet[0], 2);
                 p2BidValueText.text = (textCase[0] + highBid).ToString();
@@ -189,7 +190,7 @@ public class Auction : MonoBehaviour
                 CoinYet[0] = bNum;
                 CoinYet[1] = bidPlayer;
                 TimeReCast();
-            }   
+            }
         }
     }
 
@@ -209,10 +210,11 @@ public class Auction : MonoBehaviour
         B = endText[0].GetComponent<Text>().color.b;
         endText[0].GetComponent<Text>().color = new Color(R, G, B, 1.0f);
 
-        if (MainGameManager.PrecedNum == 1)
+        if (MainGameManager.preferredPlayerNo == 1)
         {
             endText[0].text = "Player1が\n" + textCase[0].ToString() + "点で\n落札しました";
-        }else if (MainGameManager.PrecedNum == 2)
+        }
+        else if (MainGameManager.preferredPlayerNo == 2)
         {
             endText[0].text = "Player2が\n" + textCase[1].ToString() + "点で\n落札しました";
         }
@@ -233,7 +235,7 @@ public class Auction : MonoBehaviour
 
     void CharaMove()
     {
-       // charaTransform = Mathf.Abs(Mathf.Sin(Time.time * 10));
+        // charaTransform = Mathf.Abs(Mathf.Sin(Time.time * 10));
         if (charaCount > 0)
         {
             charaTransform += 0.1f;
@@ -241,9 +243,10 @@ public class Auction : MonoBehaviour
             P2Sprite.transform.eulerAngles = new Vector3(0, 0, charaTransform);
             if (charaTransform >= 5)
             {
-                charaCount=-1;
+                charaCount = -1;
             }
-        }else if (charaCount < 0)
+        }
+        else if (charaCount < 0)
         {
             charaTransform -= 0.1f;
             P1Sprite.transform.eulerAngles = new Vector3(0, 0, -charaTransform);
@@ -350,15 +353,17 @@ public class Auction : MonoBehaviour
 
     void TimeQuartzer()
     {
-        if (kamenRider <= 3.1f && countQuartzer==0)
+        if (kamenRider <= 3.1f && countQuartzer == 0)
         {
             audioMoney1.PlayOneShot(soundQuartzer);
             countQuartzer++;//1になる(次は2秒)
-        }else if (kamenRider <= 2.1f && countQuartzer==1)
+        }
+        else if (kamenRider <= 2.1f && countQuartzer == 1)
         {
             audioMoney1.PlayOneShot(soundQuartzer);
             countQuartzer++;//2になる
-        }else if (kamenRider <= 1.1f && countQuartzer==2)
+        }
+        else if (kamenRider <= 1.1f && countQuartzer == 2)
         {
             audioMoney1.PlayOneShot(soundQuartzer);
             countQuartzer++;//3になる
