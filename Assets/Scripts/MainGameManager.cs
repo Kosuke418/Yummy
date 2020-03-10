@@ -7,44 +7,32 @@ using UnityEngine.SceneManagement;
 public class MainGameManager : MonoBehaviour
 {
     // 各種タイル
-    public Tile[,] AllTiles = new Tile[3, 10];
+    Tile[,] AllTiles = new Tile[3, 10];
 
     // タイマー
-    int seconds;
-    int commaSeconds;
-    public Text timerText;
-    public float limitTime;
-    float selectionRestrictionTime = 1f;
+    readonly float selectionRestrictionTime = 5f;
+    float limitTime;
+    public Text TimerText;
 
     // 競売に使うスタティック変数
-    public static int[] player1IngredientNos;
-    public static int[] player2IngredientNos;
-    public static List<int> player1CuisineNos;
-    public static List<int> player2CuisineNos;
-    public static int player1Score;
-    public static int player2Score;
-    public static int howToReturnFromAuction = 0;
-    public static int preferredPlayerNo;
-    public static int leftIngredientNo;
-    public static int rightIngredientNo;
+    public static int[] Player1IngredientsNumber;
+    public static int[] Player2IngredientsNumber;
+    public static List<int> Player1FoodsNumber;
+    public static List<int> Player2FoodsNumber;
+    public static int Player1Score;
+    public static int Player2Score;
+    public static int HowToReturnFromAuction;
+    public static int PreferredPlayerNo;
+    public static int SelectedIngredientNumber;
+    public static int NotSelectedIngredientNumber;
 
     // ターン
-    int totalTurnCount = 99;
-    public static int remainingTurnCount = 99;
-
-    // ターンやスコアUIのテキストオブジェクト
+    readonly int totalTurnCount = 30;
+    public static int RemainingTurnCount;
     public Text TurnCountText;
-    public Text P1ReachScore1;
-    public Text P1ReachScore2;
-    public Text P2ReachScore1;
-    public Text P2ReachScore2;
 
-    // リーチ中の食べ物のスコア
-    //public static string P1ReachScore;
-    //public static string P2ReachScore;
-
-    // 中央二つのタイル
-    public Image[] selectIngredientTiles = new Image[2];
+    // 中央二つのタイル(リーチ中のカラーを変える為)
+    public Image[] SelectIngredientTiles = new Image[2];
 
     // オーディオデータ
     public AudioClip StartVoice;
@@ -59,20 +47,19 @@ public class MainGameManager : MonoBehaviour
     InputManager inputManager;
 
     // プレイヤーごとの変数格納場所
-    public GameObject[] playerSprite;
+    public GameObject[] PlayerSprite;
     PlayerVariable[] playerVariable = new PlayerVariable[3];
 
+    
 
     public enum State
     {
         Ready,
         Generate,
         Choice,
-        MakeFood,
-        Check,
-        CheckTile,
+        SetIngred,
+        CheckIngred,
         Result,
-        ScoreView
     }
 
     private State state;
@@ -81,64 +68,80 @@ public class MainGameManager : MonoBehaviour
     {
         for (int i = 1; i < playerVariable.Length; i++)
         {
-            playerVariable[i] = playerSprite[i].GetComponent<PlayerVariable>();
+            playerVariable[i] = PlayerSprite[i].GetComponent<PlayerVariable>();
         }
+
         inputManager = GetComponent<InputManager>();
         dialog = GetComponent<Dialog>();
-        // 残り食材の表示
-        TurnCountText.text = "残り食材." + remainingTurnCount;
-        // PlayerScoreの表示
     }
 
 
     void Start()
     {
-        // すべてのタイルNumberに0を代入する(タイルの初期化)
         var AllTilesOneDim = FindObjectsOfType<Tile>();
+
         foreach (Tile t in AllTilesOneDim)
         {
             t.Number = 0;
             AllTiles[t.PlayerNo, t.TileNo] = t;
         }
-        // Auctionから帰ってきたときGameProgress=1としてState.MakeFoodに遷移
-        if (howToReturnFromAuction == 1)
+
+        // Auctionから遷移した際，State.CheckIngredにします．
+        if (HowToReturnFromAuction == 1)
         {
-            AssignVariableFromAuction();
+            ResotoreVariableFromAuction();
             // 取得時に満タンの時最初の食材から消す
-            ArrangeTiles();
-            if (preferredPlayerNo == 1)
+            if (PreferredPlayerNo == 1)
             {
-                AllTiles[0, 0].Number = leftIngredientNo;
-                AllTiles[0, 1].Number = rightIngredientNo;
-                GetSelectIngred(1);
+                AddIngredient(1);
             }
             else
             {
-                AllTiles[0, 0].Number = leftIngredientNo;
-                AllTiles[0, 1].Number = rightIngredientNo;
-                GetSelectIngred(2);
+                AddIngredient(2);
             }
-            state = State.CheckTile;
+            state = State.CheckIngred;
         }
-        // Auctionから掛け金0で帰ってきたときGameProgress=2としてState.MakeFoodに遷移
-        else if (howToReturnFromAuction == 2)
+        // Auctionから掛け金0で遷移した際，State.Choiceにします．
+        else if (HowToReturnFromAuction == 2)
         {
-            AssignVariableFromAuction();
-            state = State.Generate;
+            ResotoreVariableFromAuction();
+            state = State.Choice;
         }
-        // 通常状態においてState.Readyに遷移
+        // 通常，State.Readyにします．
         else
         {
-            player1IngredientNos = new int[10];
-            player2IngredientNos = new int[10];
             state = State.Ready;
         }
     }
 
-    // 食材生成の関数(numは生成する食料数の指定)
-    void Generate(int num)
+    /// <summary>
+    /// ゲームの開始時に呼び出します．
+    /// </summary>
+    /// <remarks>
+    /// AuctionSceneから帰ってきた際に初期化したくない変数の初期化などに使用します．
+    /// </remarks>
+    void LoadStartVariable()
     {
-        //startからendまでの食料を生成
+        HowToReturnFromAuction = 0;
+        playerVariable[1].Score = 1000;
+        playerVariable[2].Score = 1000;
+        Player1IngredientsNumber = new int[10];
+        Player2IngredientsNumber = new int[10];
+        Player1FoodsNumber = new List<int>();
+        Player2FoodsNumber = new List<int>();
+        RemainingTurnCount = totalTurnCount;
+        TurnCountText.text = "残り食材." + RemainingTurnCount;
+    }
+
+    /// <summary>
+    /// 中央のTileにIngredientを生成します．
+    /// </summary>
+    /// <remarks>
+    /// 生成したいIngredientの数を指定し，その数のIngredientを中央のTileに生成します．
+    /// </remarks>
+    /// <param name="numIngredient">生成したいIngredientの数を指定できます．</param>
+    void GenerateIngredient(int numIngredient)
+    {
         var start = 1;
         var end = Library.Instance.Ingreds.Count() - 1;
 
@@ -148,30 +151,131 @@ public class MainGameManager : MonoBehaviour
         {
             numbers.Add(i);
         }
-        while (num-- > 0)
+        while (numIngredient-- > 0)
         {
             int index = Random.Range(0, numbers.Count);
             int randomNum = numbers[index];
-            AllTiles[0, num].Number = randomNum;
+            AllTiles[0, numIngredient].Number = randomNum;
             numbers.RemoveAt(index);
         }
     }
 
-    // タイルの並び替えの関数(隙間が空いたら詰める)
-    void SortTiles()
+    /// <summary>
+    /// 指定の時間が経ったときTrueを返します．
+    /// </summary>
+    bool IsTimelimit()
     {
-        for (int i = 1; i <= 2; i++)
+        // タイマーの表示とスタート
+        limitTime -= Time.deltaTime;
+        int seconds = (int)limitTime;
+        int commaSeconds = (int)((limitTime - seconds) * 100);
+        if (seconds >= 0 && commaSeconds >= 0)
+        {
+            TimerText.text = seconds.ToString() + "." + commaSeconds.ToString();
+        }
+        return limitTime <= 0f;
+    }
+
+    /// <summary>
+    /// 指定されたTileのIngredientをそれぞれの手持ちIngredientに格納します．
+    /// </summary>
+    /// <param name="leftPlayerNo">左のTileを指定したプレイヤーのNoです．</param>
+    void AddIngredient(int leftPlayerNo)
+    {
+        RemoveFirstIngredient();
+        int rightPlayerNo = 3 - leftPlayerNo;
+        for (int FoodNum = 0; FoodNum < 10; FoodNum++)
+        {
+            if (AllTiles[leftPlayerNo, FoodNum].Number == 0)
+            {
+                AllTiles[leftPlayerNo, FoodNum].Number = AllTiles[0, 0].Number;
+                AllTiles[0, 0].Number = 0;
+
+                seSource.clip = PutFood;
+                seSource.Play();
+
+                break;
+            }
+        }
+        for (int FoodNum = 0; FoodNum < 10; FoodNum++)
+        {
+            if (AllTiles[rightPlayerNo, FoodNum].Number == 0)
+            {
+                AllTiles[rightPlayerNo, FoodNum].Number = AllTiles[0, 1].Number;
+                AllTiles[0, 1].Number = 0;
+
+                seSource.clip = PutFood;
+                seSource.Play();
+
+                break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// AucitionSceneに遷移する際に変数を保存します．
+    /// </summary>
+    void StoreVariableToAuction()
+    {
+        for (int playerNo = 1; playerNo <= 2; playerNo++)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                playerVariable[playerNo].IngredientsNumber[i] = AllTiles[playerNo, i].Number;
+            }
+        }
+        Player1IngredientsNumber = playerVariable[1].IngredientsNumber;
+        Player2IngredientsNumber = playerVariable[2].IngredientsNumber;
+        Player1FoodsNumber = playerVariable[1].FoodsNumber;
+        Player2FoodsNumber = playerVariable[2].FoodsNumber;
+        Player1Score = playerVariable[1].Score;
+        Player2Score = playerVariable[2].Score;
+    }
+    /// <summary>
+    /// AucitionSceneから遷移する際に変数を復元します．
+    /// </summary>
+    void ResotoreVariableFromAuction()
+    {
+        playerVariable[1].FoodsNumber = Player1FoodsNumber;
+        playerVariable[2].FoodsNumber = Player2FoodsNumber;
+        for (int i = 0; i < 10; i++)
+        {
+            AllTiles[1, i].Number = Player1IngredientsNumber[i];
+            AllTiles[2, i].Number = Player2IngredientsNumber[i];
+        }
+        for (int i = 0; i < Player1FoodsNumber.Count(); i++)
+        {
+            playerVariable[1].FoodsImage[i].enabled = true;
+            playerVariable[1].FoodsImage[i].sprite = Library.Instance.Foods[Player1FoodsNumber[i]].FoodSprite;
+        }
+        for (int i = 0; i < Player2FoodsNumber.Count(); i++)
+        {
+            playerVariable[2].FoodsImage[i].enabled = true;
+            playerVariable[2].FoodsImage[i].sprite = Library.Instance.Foods[Player2FoodsNumber[i]].FoodSprite;
+        }
+        playerVariable[1].Score = Player1Score;
+        playerVariable[2].Score = Player2Score;
+        AllTiles[0, 0].Number = SelectedIngredientNumber;
+        AllTiles[0, 1].Number = NotSelectedIngredientNumber;
+    }
+
+    /// <summary>
+    /// Tileの間に隙間が空いた場合に詰めます．
+    /// </summary>
+    void SortIngredients()
+    {
+        for (int playerNo = 1; playerNo <= 2; playerNo++)
         {
             for (int j = 0; j < 9; j++)
             {
-                if (AllTiles[i,j].Number == 0)
+                if (AllTiles[playerNo,j].Number == 0)
                 {
                     for (int k = j + 1; k < 10; k++)
                     {
-                        if (AllTiles[i, k].Number != 0)
+                        if (AllTiles[playerNo, k].Number != 0)
                         {
-                            AllTiles[i, j].Number = AllTiles[i, k].Number;
-                            AllTiles[i, k].Number = 0;
+                            AllTiles[playerNo, j].Number = AllTiles[playerNo, k].Number;
+                            AllTiles[playerNo, k].Number = 0;
                             break;
                         }
                     }
@@ -180,15 +284,19 @@ public class MainGameManager : MonoBehaviour
         }
     }
 
-    void ArrangeTiles()
+    /// <summary>
+    /// Tilesが一杯になっている場合は最初のTileを取り除きます．
+    /// </summary>
+    void RemoveFirstIngredient()
     {
-        for (int i = 1; i <= 2; i++)
-        {
-            if (AllTiles[i, 9].Number != 0) AllTiles[i, 0].Number = 0;
-        }
-        SortTiles();
+        if (AllTiles[1, 9].Number != 0) AllTiles[1, 0].Number = 0;
+        if (AllTiles[2, 9].Number != 0) AllTiles[2, 0].Number = 0;
+        SortIngredients();
     }
 
+    /// <summary>
+    /// Foodを作る際のSEを再生します．
+    /// </summary>
     void PlayMakeFoodSound()
     {
         // 料理作成時のSEの判定、1/5の確率で包丁の音がなる
@@ -205,20 +313,24 @@ public class MainGameManager : MonoBehaviour
         }
     }
 
-    void CheckFood()
+    /// <summary>
+    /// 手持ちのingredientからFoodを生成します．
+    /// </summary>
+    /// <remarks>
+    /// LibraryのFoodの順番で手持ちIngredientと比較し，
+    /// Foodを生成できるIngredientを所持していた場合生成し，手持ちFoodに格納します．
+    /// </remarks>
+    void CookFood()
     {
         for(int playerNo = 1; playerNo <= 2; playerNo++)
         {
-            playerVariable[playerNo].reachIngredientNos.Clear();
-            playerVariable[playerNo].reachCuisineNos.Clear();
+            playerVariable[playerNo].ReachIngredientsNumber.Clear();
+            playerVariable[playerNo].ReachFoodsNumber.Clear();
             var tempTileNum = new List<int>();
-            //var MissingIngredNums = new List<int>();
 
             for (int i = 0; i < Library.Instance.Foods.Count(); i++)
             {
                 tempTileNum.Clear();
-                //MissingIngredNums.Clear();
-
                 for (int j = 0; j < Library.Instance.Foods[i].Answers.Count(); j++)
                 {
                     for (int k = 0; k < 10; k++)
@@ -228,84 +340,55 @@ public class MainGameManager : MonoBehaviour
                             tempTileNum.Add(k);
                             break;
                         }
-                        /*
-                        else if (k == 9)
-                        {
-                            MissingIngredNums.Add(Library.Instance.Foods[i].Answers[j].AnswerNumber);
-                        }
-                        */
                     }
                 }
 
-                /*
-                if(MissingIngredNums.Count() == 1 && AllTiles[playerNo, 9].Number != 0)
-                {
-                    MissingIngredNums.Clear();
-                    for (int j = 0; j < Library.Instance.Foods[i].Answers.Count(); j++)
-                    {
-                        for (int k = 1; k < 10; k++)
-                        {
-                            if (Library.Instance.Foods[i].Answers[j].AnswerNumber == AllTiles[playerNo, k].Number) break;
-                            if (k == 9) MissingIngredNums.Add(Library.Instance.Foods[i].Answers[j].AnswerNumber);
-                        }
-                    }
-                }
-                */
-
-                // 必要な食材数と持っている必要食材数が一致(料理する)
-                if (Library.Instance.Foods[i].Answers.Count() == tempTileNum.Count() && tempTileNum.Count() != 0)
+                // 料理に必要な食材数と持っている必要食材数が一致するとき料理し，手持ち料理に格納します．
+                if (Library.Instance.Foods[i].Answers.Count() == tempTileNum.Count() && tempTileNum.Any())
                 {
 
-                    playerVariable[playerNo].reachCuisineNos.Add(i);
+                    playerVariable[playerNo].ReachFoodsNumber.Add(i);
 
                     foreach (int num in tempTileNum)
                     {
                         AllTiles[playerNo, num].Number = 0;
                     }
 
-                    playerVariable[playerNo].HavingScore += Library.Instance.Foods[i].FoodScore;
+                    playerVariable[playerNo].Score += Library.Instance.Foods[i].FoodScore;
 
                     PlayMakeFoodSound();
 
-                    playerVariable[playerNo].havingCuisineNos.Add(i);
+                    playerVariable[playerNo].FoodsNumber.Add(i);
 
-                    for (int j = 0; j < playerVariable[playerNo].havingCuisineImages.Length; j++)
+                    for (int j = 0; j < playerVariable[playerNo].FoodsImage.Length; j++)
                     {
-                        if (playerVariable[playerNo].havingCuisineImages[j].sprite == null)
+                        if (playerVariable[playerNo].FoodsImage[j].sprite == null)
                         {
-                            playerVariable[playerNo].havingCuisineImages[j].enabled = true;
-                            playerVariable[playerNo].havingCuisineImages[j].sprite = Library.Instance.Foods[i].FoodSprite;
+                            playerVariable[playerNo].FoodsImage[j].enabled = true;
+                            playerVariable[playerNo].FoodsImage[j].sprite = Library.Instance.Foods[i].FoodSprite;
                             break;
                         }
                     }
                 }
-                /*
-                // 足りない食材が残り一つの時(リーチ状態)
-                else if (MissingIngredNums.Count() == 1)
-                {
-                    Debug.Log(tempTileNum[0] + "," + AllTiles[playerNo, 9].Number);
-                    playerVariable[playerNo].reachIngredientNos.Add(MissingIngredNums[0]);
-                    playerVariable[playerNo].reachCuisineNos.Add(i);
-                }
-                */
             }
         }
     }
 
-    void CheckReachFood()
+    /// <summary>
+    /// 手持ちのIngredientからリーチ判定を行います．
+    /// </summary>
+    /// <remarks>
+    /// LibraryのFoodの順番で手持ちIngredientと比較し，
+    /// 足りないIngredientが残り一つ出会った時，それをReachIngredientsNumberに格納します．
+    /// </remarks>
+    void SaveReachIngredient()
     {
         for (int playerNo = 1; playerNo <= 2; playerNo++)
         {
-            /*
-            playerVariable[playerNo].reachIngredientNos.Clear();
-            playerVariable[playerNo].reachCuisineNos.Clear();
-            var tempTileNum = new List<int>();
-            */
             var MissingIngredNums = new List<int>();
 
             for (int i = 0; i < Library.Instance.Foods.Count(); i++)
             {
-                //tempTileNum.Clear();
                 MissingIngredNums.Clear();
                 
                 for (int j = 0; j < Library.Instance.Foods[i].Answers.Count(); j++)
@@ -315,7 +398,6 @@ public class MainGameManager : MonoBehaviour
                         if (k == 0 && AllTiles[playerNo, 9].Number != 0) continue;
                         if (Library.Instance.Foods[i].Answers[j].AnswerNumber == AllTiles[playerNo, k].Number)
                         {
-                            //tempTileNum.Add(k);
                             break;
                         }
                         else if (k == 9)
@@ -325,19 +407,24 @@ public class MainGameManager : MonoBehaviour
                     }
                 }
 
-                // 足りない食材が残り一つの時(リーチ状態)
+                // 足りない食材が残り一つの時リーチ食材として格納するします．
                 if (MissingIngredNums.Count() == 1)
                 {
-                    playerVariable[playerNo].reachIngredientNos.Add(MissingIngredNums[0]);
-                    playerVariable[playerNo].reachCuisineNos.Add(i);
+                    playerVariable[playerNo].ReachIngredientsNumber.Add(MissingIngredNums[0]);
+                    playerVariable[playerNo].ReachFoodsNumber.Add(i);
                 }
             }
         }
     }
 
-
-
-    void CheckReach()
+    /// <summary>
+    /// リーチ判定中のIngredientが中央Tileに出現した場合に色を付けます．
+    /// </summary>
+    /// <remarks>
+    /// SaveReachIngred()で保存したIngredientが中央Tileに出現した際，
+    /// Player1であれば赤色，Player2であれば青色，両方のリーチIngredientであれば紫色に点滅します．
+    /// </remarks>
+    void PutColorToReachIngredient()
     {
         float level = 0.90f * Mathf.Abs(Mathf.Sin(Time.time * 3));
         bool[,] isReachIngredTile = new bool[2,3];
@@ -346,14 +433,14 @@ public class MainGameManager : MonoBehaviour
 
         for (int playerNo = 1; playerNo <= 2; playerNo++)
         {
-            for(int i = 0; i < playerVariable[playerNo].reachIngredientNos.Count(); i++)
+            for(int i = 0; i < playerVariable[playerNo].ReachIngredientsNumber.Count(); i++)
             {
-                if (AllTiles[0, 0].Number == playerVariable[playerNo].reachIngredientNos[i])
+                if (AllTiles[0, 0].Number == playerVariable[playerNo].ReachIngredientsNumber[i])
                 {
                     isReachIngredTile[0, playerNo] = true;
                     tempIndexNumber[0,playerNo] = i;
                 }
-                if (AllTiles[0, 1].Number == playerVariable[playerNo].reachIngredientNos[i])
+                if (AllTiles[0, 1].Number == playerVariable[playerNo].ReachIngredientsNumber[i])
                 {
                     isReachIngredTile[1, playerNo] = true;
                     tempIndexNumber[1,playerNo] = i;
@@ -363,24 +450,18 @@ public class MainGameManager : MonoBehaviour
 
         for(int i = 0; i < 2; i++)
         {
-            tileColor = selectIngredientTiles[i].GetComponent<Image>();
+            tileColor = SelectIngredientTiles[i].GetComponent<Image>();
             if (isReachIngredTile[i,1])
             {
                 // 赤色
                 if (!isReachIngredTile[i,2])
                 {
                     tileColor.color = new Color(1f, level, level, 1f);
-                    //P1ReachScore1.enabled = true;
-                    //P1ReachScore1.text = "+" + Library.Instance.Foods[playerVariable[1].reachCuisineNos[tempIndexNumber[i,1]]].FoodScore.ToString();
                 }
                 // 紫色
                 else
                 {
                     tileColor.color = new Color(1f, level, 1f, 1f);
-                    //P1ReachScore1.enabled = true;
-                    //P1ReachScore1.text = "+" + Library.Instance.Foods[playerVariable[1].reachCuisineNos[tempIndexNumber[i, 1]]].FoodScore.ToString();
-                    //P1ReachScore1.enabled = true;
-                    //P1ReachScore1.text = "+" + Library.Instance.Foods[playerVariable[1].reachCuisineNos[tempIndexNumber[i, 1]]].FoodScore.ToString();
                 }
             }
             else if (isReachIngredTile[i,2])
@@ -395,183 +476,80 @@ public class MainGameManager : MonoBehaviour
             }
         }
     }
-
-    //1なら左がP1 2なら左がP2
-    void GetSelectIngred(int num)
-    {
-        int right;
-        if (num == 1) right = 2;
-        else right = 1;
-        for (int FoodNum = 0; FoodNum < 10; FoodNum++)
-        {
-            if (AllTiles[num, FoodNum].Number == 0)
-            {
-                AllTiles[num, FoodNum].Number = AllTiles[0, 0].Number;
-                AllTiles[0, 0].Number = 0;
-
-                seSource.clip = PutFood;
-                seSource.Play();
-
-                break;
-            }
-        }
-        for (int FoodNum = 0; FoodNum < 10; FoodNum++)
-        {
-            if (AllTiles[right, FoodNum].Number == 0)
-            {
-                AllTiles[right, FoodNum].Number = AllTiles[0, 1].Number;
-                AllTiles[0, 1].Number = 0;
-                break;
-            }
-        }
-    }
-
-    void SaveVariableToAuction()
-    {
-        for(int playerNo = 1; playerNo <= 2; playerNo++)
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                playerVariable[playerNo].havingIngredientNos[i] = AllTiles[playerNo, i].Number;
-                player1IngredientNos[i] = playerVariable[1].havingIngredientNos[i];
-                player2IngredientNos[i] = playerVariable[2].havingIngredientNos[i];
-            }
-        }
-        player1CuisineNos = playerVariable[1].havingCuisineNos;
-        player2CuisineNos = playerVariable[2].havingCuisineNos;
-        player1Score = playerVariable[1].HavingScore;
-        player2Score = playerVariable[2].HavingScore;
-    }
-    void AssignVariableFromAuction()
-    {
-        playerVariable[1].havingCuisineNos = player1CuisineNos;
-        playerVariable[2].havingCuisineNos = player2CuisineNos;
-        for (int i = 0; i < 10; i++)
-        {
-            AllTiles[1, i].Number = player1IngredientNos[i];
-            AllTiles[2, i].Number = player2IngredientNos[i];
-        }
-        for(int i = 0; i < player1CuisineNos.Count(); i++)
-        {
-
-            playerVariable[1].havingCuisineImages[i].enabled = true;
-            playerVariable[1].havingCuisineImages[i].sprite = Library.Instance.Foods[player1CuisineNos[i]].FoodSprite;
-        }
-        for (int i = 0; i < player2CuisineNos.Count(); i++)
-        {
-            playerVariable[2].havingCuisineImages[i].enabled = true;
-            playerVariable[2].havingCuisineImages[i].sprite = Library.Instance.Foods[player2CuisineNos[i]].FoodSprite;
-        }
-        playerVariable[1].HavingScore = player1Score;
-        playerVariable[2].HavingScore = player2Score;
-    }
     
     void Update()
     {
-        // ここからゲームの流れに沿ってStateが遷移
-        // ゲームのスタート判定State、isPlayingならばState.Generateに遷移
-        if (state == State.Ready)
+        switch (state)
         {
-            if (dialog.IsPlaying())
-            {
-                playerVariable[1].HavingScore = 1000;
-                playerVariable[2].HavingScore = 1000;
-                state = State.Generate;
-            }
-        }
-        // 食材を生成するState
-        else if (state == State.Generate)
-        {
-            // 真ん中のタイルに食材が入っていなかった場合自動的にGenerateを行うその後Choiceに遷移
-            if (AllTiles[0, 0].Number == 0 && AllTiles[0, 1].Number == 0)
-            {
-                Generate(2);
-                remainingTurnCount--;
-                // 残り食材の表示
-                TurnCountText.text = "残り食材." + remainingTurnCount;
+            case State.Ready:
+                if (dialog.IsPlaying())
+                {
+                    LoadStartVariable();
+                    state = State.Generate;
+                }
+
+                break;
+
+            case State.Generate:
+                if (AllTiles[0, 0].Number == 0 && AllTiles[0, 1].Number == 0)
+                {
+                    GenerateIngredient(2);
+                    RemainingTurnCount--;
+                    TurnCountText.text = "残り食材." + RemainingTurnCount;
+                    state = State.Choice;
+                }
                 limitTime = selectionRestrictionTime;
-                state = State.Choice;
-            }
-        }
-        // 食材を選択する際のState
-        else if (state == State.Choice)
-        {
-            CheckReach();
 
-            // タイマーの表示とスタート
-            limitTime -= Time.deltaTime;
-            seconds = (int)limitTime;
-            commaSeconds = (int)((limitTime - seconds) * 100);
-            if (seconds >= 0 && commaSeconds >= 0)
-            {
-                timerText.text = seconds.ToString() + "." + commaSeconds.ToString();
-            }
+                break;
 
-            if (limitTime <= 0)
-            {
-                state = State.MakeFood;
-            }
-            howToReturnFromAuction = 0;
-        }
-        else if (state == State.MakeFood)
-        {
-            if (inputManager.GetCursorPosition(1) == 0 && inputManager.GetCursorPosition(2) == 0)
-            {
-                //P1ReachScore = P1ReachScore1.text;
-                //P2ReachScore = P2ReachScore1.text;
-                leftIngredientNo = AllTiles[0, 0].Number;
-                rightIngredientNo = AllTiles[0, 1].Number;
-                SaveVariableToAuction();
-                SceneManager.LoadScene("AuctionScene");
-            }
-            else if (inputManager.GetCursorPosition(1) == 1 && inputManager.GetCursorPosition(2) == 1)
-            {
-                //P1ReachScore = P1ReachScore2.text;
-                //P2ReachScore = P2ReachScore2.text;
-                leftIngredientNo = AllTiles[0, 1].Number;
-                rightIngredientNo = AllTiles[0, 0].Number;
-                SaveVariableToAuction();
-                SceneManager.LoadScene("AuctionScene");
-            }
-            else if (inputManager.GetCursorPosition(1) == 0 && inputManager.GetCursorPosition(2) == 1)
-            {
-                ArrangeTiles();
-                GetSelectIngred(1);
-            }
-            else if (inputManager.GetCursorPosition(1) == 1 && inputManager.GetCursorPosition(2) == 0)
-            {
-                ArrangeTiles();
-                GetSelectIngred(2);
-            }
-            state = State.CheckTile;
-        }
-        else if (state == State.CheckTile)
-        {
-            if (remainingTurnCount == 0)
-            {
-                state = State.Result;
-            }
-            else
-            {
-                CheckFood();
-                CheckReachFood();
-                SortTiles();
-                state = State.Generate;
-            }
-        }
-        else if (state == State.Result)
-        {
-            dialog.ResultDialog();
-            player1CuisineNos = new List<int>();
-            player2CuisineNos = new List<int>();
-            timerText.enabled = false;
-            remainingTurnCount = totalTurnCount;
+            case State.Choice:
+                PutColorToReachIngredient();
+                if (IsTimelimit()) state = State.SetIngred;
+                break;
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
+            case State.SetIngred:
+                HowToReturnFromAuction = 0;
+                if (inputManager.GetCursorPosition(1) == inputManager.GetCursorPosition(2))
+                {
+                    SelectedIngredientNumber = AllTiles[0, inputManager.GetCursorPosition(1)].Number;
+                    NotSelectedIngredientNumber = AllTiles[0, 1 - inputManager.GetCursorPosition(1)].Number;
+                    StoreVariableToAuction();
+                    SceneManager.LoadScene("AuctionScene");
+                }
+                else if (inputManager.GetCursorPosition(1) != inputManager.GetCursorPosition(2))
+                {
+                    AddIngredient(1 + inputManager.GetCursorPosition(1));
+                }
+                state = State.CheckIngred;
 
-                SceneManager.LoadScene("Result");
-            }
+                break;
+
+            case State.CheckIngred:
+                if (RemainingTurnCount != 0)
+                {
+                    CookFood();
+                    SaveReachIngredient();
+                    SortIngredients();
+                    state = State.Generate;
+                }
+                else
+                {
+                    state = State.Result;
+                }
+
+                break;
+
+            case State.Result:
+                dialog.ResultDialog();
+                TimerText.enabled = false;
+                Player1Score = playerVariable[1].Score;
+                Player2Score = playerVariable[2].Score;
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    SceneManager.LoadScene("Result");
+                }
+
+                break;
         }
     }
 }

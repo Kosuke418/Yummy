@@ -11,14 +11,7 @@ public class StartGame : MonoBehaviour
 
     void Start()
     {
-        //MainGameManager.player1Money = 1000;
-        //MainGameManager.player2Money = 1000;
-        MainGameManager.leftIngredientNo =0;
-        MainGameManager.rightIngredientNo =0;
-        MainGameManager.howToReturnFromAuction =0;
-        MainGameManager.preferredPlayerNo =0;
-        MainGameManager.player1CuisineNos = new List<int>();
-        MainGameManager.player2CuisineNos = new List<int>();
+
     }
 
     void Update()

@@ -10,7 +10,7 @@ public class Dialog : MonoBehaviour
 
     void Start()
     {
-        if(MainGameManager.howToReturnFromAuction == 0)
+        if(MainGameManager.HowToReturnFromAuction == 0)
         StartDialog();
     }
 

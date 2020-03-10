@@ -64,15 +64,15 @@ public class Auction : MonoBehaviour
         p2BidValueText.text = "0";
 
         //プレイヤースコアテキストを設定
-        p1ScoreText.text = (MainGameManager.player1Score).ToString();
-        p2ScoreText.text = (MainGameManager.player2Score).ToString();
+        p1ScoreText.text = (MainGameManager.Player1Score).ToString();
+        p2ScoreText.text = (MainGameManager.Player2Score).ToString();
 
         //操作テキストを設定
         lbText.text = "+" + lowBid.ToString();
         rbText.text = "+" + highBid.ToString();
 
         //ここから食材画像を指定
-        foodImage.sprite = Library.Instance.Ingreds[MainGameManager.leftIngredientNo].IngredSprite;
+        foodImage.sprite = Library.Instance.Ingreds[MainGameManager.SelectedIngredientNumber].IngredSprite;
 
 
         //AudioSourceConmponentを取得
@@ -105,20 +105,20 @@ public class Auction : MonoBehaviour
                 if (textCase[0] < textCase[1])
                 {
                     //MainGameManager.player2Money -= int.Parse(p2BidValueText.text);
-                    MainGameManager.preferredPlayerNo = 2;
+                    MainGameManager.PreferredPlayerNo = 2;
                     EndAuction();
                 }
                 else if (textCase[0] > textCase[1])
                 {
                     //MainGameManager.player1Money -= int.Parse(p1BidValueText.text);
-                    MainGameManager.preferredPlayerNo = 1;
+                    MainGameManager.PreferredPlayerNo = 1;
                     EndAuction();
                 }
                 else if (textCase[0] == textCase[1])
                 {
                     //kamenRider = 3;
-                    MainGameManager.howToReturnFromAuction = 2;
-                    MainGameManager.remainingTurnCount--;
+                    MainGameManager.HowToReturnFromAuction = 2;
+                    MainGameManager.RemainingTurnCount--;
                     SceneManager.LoadScene("Main");
 
                 }
@@ -136,7 +136,7 @@ public class Auction : MonoBehaviour
             }
             if (kamenRider <= 0)
             {
-                MainGameManager.howToReturnFromAuction = 1;
+                MainGameManager.HowToReturnFromAuction = 1;
                 SceneManager.LoadScene("Main");
             }
         }
@@ -210,11 +210,11 @@ public class Auction : MonoBehaviour
         B = endText[0].GetComponent<Text>().color.b;
         endText[0].GetComponent<Text>().color = new Color(R, G, B, 1.0f);
 
-        if (MainGameManager.preferredPlayerNo == 1)
+        if (MainGameManager.PreferredPlayerNo == 1)
         {
             endText[0].text = "Player1が\n" + textCase[0].ToString() + "点で\n落札しました";
         }
-        else if (MainGameManager.preferredPlayerNo == 2)
+        else if (MainGameManager.PreferredPlayerNo == 2)
         {
             endText[0].text = "Player2が\n" + textCase[1].ToString() + "点で\n落札しました";
         }

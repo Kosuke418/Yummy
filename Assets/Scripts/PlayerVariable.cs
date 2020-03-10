@@ -5,41 +5,32 @@ using UnityEngine.UI;
 
 public class PlayerVariable : MonoBehaviour
 {
-    public int playerNumber;
-    public int[] havingIngredientNos = new int[10];
-    public List<int> havingCuisineNos = new List<int>();
-    public Image[] havingCuisineImages;
-    public Text havingScoreText;
-    public List<int> reachIngredientNos = new List<int>();
-	public List<int> reachCuisineNos = new List<int>();
-	public Text leftReachCuisineScore;
-    public Text rightReachCuisineScore;
+    public int[] IngredientsNumber = new int[10];
+    public List<int> FoodsNumber = new List<int>();
+    public Image[] FoodsImage;
+    public Text ScoreText;
+    public List<int> ReachIngredientsNumber = new List<int>();
+	public List<int> ReachFoodsNumber = new List<int>();
+	public Text LeftReachCuisineScore;
+    public Text RightReachCuisineScore;
 
-    public int HavingScore
+    /// <summary>
+    /// Scoreプロパティです。
+    /// </summary>
+    /// <value>Scoreに値を代入するとScoreTextにも代入されます</value>
+    public int Score
     {
         get
         {
-            return havingScore;
+            return score;
         }
 
         set
         {
-            havingScore = value;
-            havingScoreText.text = value.ToString();
+            score = value;
+            ScoreText.text = value.ToString();
         }
     }
 
-    private int havingScore;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        HavingScore = 1000;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    private int score;
 }
