@@ -56,20 +56,31 @@ public class InputManager : MonoBehaviour
                 cursorPosition1 = 1;
                 PlaySound();
             }
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKeyDown(KeyCode.LeftArrow) || EnemyAI.enemyCursor == 1)
             {
                 leftSelectCursor2.enabled = true;
                 rightSelectCursor2.enabled = false;
                 cursorPosition2 = 0;
                 PlaySound();
             }
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
+            else if (Input.GetKeyDown(KeyCode.RightArrow) || EnemyAI.enemyCursor == 2)
             {
                 leftSelectCursor2.enabled = false;
                 rightSelectCursor2.enabled = true;
                 cursorPosition2 = 1;
                 PlaySound();
             }
+
+#if UNITY_IOS
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                leftSelectCursor1.enabled = !leftSelectCursor1.enabled;
+                rightSelectCursor1.enabled = !leftSelectCursor1.enabled;
+                cursorPosition1 = 1 - cursorPosition1;
+                PlaySound();
+            }
+#endif
         }
     }
 

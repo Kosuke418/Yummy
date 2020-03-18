@@ -22,6 +22,11 @@ public class StartGame : MonoBehaviour
         {
             StartCoroutine(StartGameDelay(0.5f));
         }
+        Touch touch = Input.GetTouch(0);
+        if (touch.phase == TouchPhase.Began)
+        {
+            StartCoroutine(StartGameDelay(0.5f));
+        }
     }
 
     private IEnumerator StartGameDelay(float waitTime)

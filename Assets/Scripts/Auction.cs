@@ -104,13 +104,13 @@ public class Auction : MonoBehaviour
                 textCase[1] = int.Parse(p2BidValueText.text);
                 if (textCase[0] < textCase[1])
                 {
-                    //MainGameManager.player2Money -= int.Parse(p2BidValueText.text);
+                    MainGameManager.Player2Score -= int.Parse(p2BidValueText.text);
                     MainGameManager.PreferredPlayerNo = 2;
                     EndAuction();
                 }
                 else if (textCase[0] > textCase[1])
                 {
-                    //MainGameManager.player1Money -= int.Parse(p1BidValueText.text);
+                    MainGameManager.Player1Score -= int.Parse(p1BidValueText.text);
                     MainGameManager.PreferredPlayerNo = 1;
                     EndAuction();
                 }

@@ -49,6 +49,7 @@ public class MainGameManager : MonoBehaviour
     // プレイヤーごとの変数格納場所
     public GameObject[] PlayerSprite;
     PlayerVariable[] playerVariable = new PlayerVariable[3];
+    EnemyAI enemyAI;
 
     
 
@@ -62,7 +63,7 @@ public class MainGameManager : MonoBehaviour
         Result,
     }
 
-    private State state;
+    public static State state;
 
     void Awake()
     {
@@ -70,7 +71,7 @@ public class MainGameManager : MonoBehaviour
         {
             playerVariable[i] = PlayerSprite[i].GetComponent<PlayerVariable>();
         }
-
+        enemyAI = PlayerSprite[2].GetComponent<EnemyAI>();
         inputManager = GetComponent<InputManager>();
         dialog = GetComponent<Dialog>();
     }
@@ -427,8 +428,8 @@ public class MainGameManager : MonoBehaviour
     void PutColorToReachIngredient()
     {
         float level = 0.90f * Mathf.Abs(Mathf.Sin(Time.time * 3));
-        bool[,] isReachIngredTile = new bool[2,3];
-        int[,] tempIndexNumber = new int[2,3];
+        var isReachIngredTile = new bool[2,3];
+        var tempIndexNumber = new int[2,3];
         Image tileColor;
 
         for (int playerNo = 1; playerNo <= 2; playerNo++)
@@ -471,7 +472,7 @@ public class MainGameManager : MonoBehaviour
             }
             else
             {
-                // 白
+                // 白色
                 tileColor.color = new Color(1f, 1f, 1f, 1f);
             }
         }
@@ -499,6 +500,7 @@ public class MainGameManager : MonoBehaviour
                     state = State.Choice;
                 }
                 limitTime = selectionRestrictionTime;
+                enemyAI.EasyAI();
 
                 break;
 
@@ -525,7 +527,7 @@ public class MainGameManager : MonoBehaviour
                 break;
 
             case State.CheckIngred:
-                if (RemainingTurnCount != 0)
+                if (RemainingTurnCount > 0)
                 {
                     CookFood();
                     SaveReachIngredient();
@@ -548,7 +550,13 @@ public class MainGameManager : MonoBehaviour
                 {
                     SceneManager.LoadScene("Result");
                 }
-
+#if UNITY_IOS
+                Touch touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Began)
+                {
+                    SceneManager.LoadScene("Result");
+                }
+#endif
                 break;
         }
     }

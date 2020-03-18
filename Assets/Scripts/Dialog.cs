@@ -64,6 +64,15 @@ public class Dialog : MonoBehaviour
             dialogText.enabled = false;
             dialogText.text = "";
         }
+#if UNITY_IOS
+        Touch touch = Input.GetTouch(0);
+        if (touch.phase == TouchPhase.Began)
+        {
+            dialogPanel.enabled = false;
+            dialogText.enabled = false;
+            dialogText.text = "";
+        }
+#endif
         // ゲーム中であるとき、Spaceキーが押されたらポーズ関数に移行
         if (Input.GetKeyDown(KeyCode.X))
         {
